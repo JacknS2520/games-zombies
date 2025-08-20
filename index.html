@@ -6,12 +6,77 @@
   <title>Zombies Game Starter</title>
   <!-- Starter CSS (optional) -->
     <link rel="stylesheet" href="styles.css">
-    <script script="script.js" defer></script>
 </head>
 <body>
   <h1>Zombies Game Starter</h1>
+  <canvas id="game-canvas" width="100%" height="100%"></canvas>
   <div id="game-container">
-    <canvas id="game-canvas" width="800" height="600"></canvas>
+    <menu if="game-menu">
+        <button id="start-button">Start Game</button>
+        <button id="pause-button">Pause Game</button>
+        <button id="reset-button">Reset Game</button>
+        <script>
+            var gameinprogress = false;
+            var timefreeze = false;
+            var pausebutton_clicked = false;
+            var gamestarted = false;
+            document.getElementById('start-button').addEventListener('click', function() {
+                function startGame() {
+                    console.log("Game Started");
+                    gameinprogress = true;
+                    gamestarted = true;
+                    document.getElementById('game-menu').style.display = 'none';
+                    timefreeze = false;
+                }
+                if (pausebutton_clicked == false) {
+                    document.getElementById('start-button').innerHTML = "Start Game";
+                    document.getElementById('start-button').addEventListener('click', startGame);
+                }
+                else {
+                    pausebutton_clicked = false;
+                    document.getElementById('start-button').innerHTML = "Resume Game";
+                    document.getElementById('start-button').addEventListener('click', resumeGame);                   
+                }
+                function resumeGame() {
+                    console.log("Game Resumed");
+                    timefreeze = false;
+                    document.getElementById('game-menu').style.display = 'none';
+                }
+            });
+
+            document.getElementById('pause-button').addEventListener('click', function() {
+                function pauseGame() {
+                    console.log("Game Paused");
+                    function stopGame() {
+                        timefreeze = true;
+                        document.getElementById('game-menu').style.display = 'visible';
+                    }
+                }
+                pauseGame();
+            });
+
+            document.getElementById('reset-button').addEventListener('click', function() {
+                function resetGame() {
+                    console.log("Game Reset");
+                    if (gameinprogress == true) {
+                        gameinprogress = false;
+                        
+                    }
+                    var1 = 0;
+                    var2 = 0;
+                    var3 = 0;
+                    <!-- Varuables above are not real repace with game data. -->
+                }
+                resetGame();
+            });
+            if (gamestared == true) {
+                var canvas = document.getElementById('game-canvas');
+                var context = canvas.getContext('2d');
+
+                canvas.style.backgroundImage = "url('level1.png')";
+            }
+        </script>
+    </menu>
   </div>
 </body>
 </html>
