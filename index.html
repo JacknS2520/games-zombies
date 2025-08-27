@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zombies Game Starter</title>
+  <title>Zombies Game</title>
   <style>
     /* Basic page styling */
 body {
@@ -13,6 +13,9 @@ body {
   margin: 0;
   padding: 0;
   text-align: center;
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
 }
 
 h1 {
@@ -21,28 +24,26 @@ h1 {
   letter-spacing: 2px;
 }
 
+/* Make canvas cover the viewport and act as background */
+#game-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;      /* <-- Optional: center the image */
+}
+
 /* Game container */
 #game-container {
+  position: relative;
+  z-index: 1;
   margin: 40px auto;
   padding: 24px;
   background: #333;
   border-radius: 16px;
   box-shadow: 0 4px 24px #0008;
   display: inline-block;
-}
-
-/* Canvas styling */
-#game-canvas {
-  display: block;
-  margin: 0 auto 24px auto;
-  background: #111;
-  border: 2px solid #444;
-  border-radius: 8px;
-  width: 640px;
-  height: 360px;
-  max-width: 90vw;
-  max-height: 50vh;
-  background-image: url('level1.jpg');
 }
 
 /* Menu styling */
@@ -71,8 +72,8 @@ h1 {
   </style>
 </head>
 <body>
-  <h1>Zombies Game Starter</h1>
   <canvas id="game-canvas"></canvas>
+  <h1>Zombies Game</h1>
   <div id="game-container">
     <div id="game-menu">
       <button id="start-button">Start Game</button>
@@ -84,12 +85,44 @@ h1 {
       let timefreeze = false;
       let gamestarted = false;
 
+      function drawCanvasBackground(imageUrl) {
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const img = new Image();
+        img.src = imageUrl;
+        img.onload = function() {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+        img.onerror = function() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "#333";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "#fff";
+          ctx.font = "24px sans-serif";
+          ctx.fillText("Background image not found!", 40, 40);
+        };
+      }
+
+      // Draw background on load
+      window.addEventListener('load', function() {
+        drawCanvasBackground('level1.jpg');
+      });
+
+      // Redraw background on resize
+      window.addEventListener('resize', function() {
+        drawCanvasBackground('level1.jpg');
+      });
+
       function startGame() {
         console.log("Game Started");
         gameinprogress = true;
         gamestarted = true;
         document.getElementById('game-menu').style.display = 'none';
         timefreeze = false;
+        drawCanvasBackground('level1.jpg'); // Draw level1.jpg on canvas
       }
 
       function resumeGame() {
@@ -110,21 +143,16 @@ h1 {
         gamestarted = false;
         timefreeze = false;
         document.getElementById('game-menu').style.display = 'flex';
+        // Optionally clear canvas
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         // Reset game data here
       }
 
       document.getElementById('start-button').addEventListener('click', startGame);
       document.getElementById('pause-button').addEventListener('click', pauseGame);
       document.getElementById('reset-button').addEventListener('click', resetGame);
-
-      // Example: set canvas background image when game starts
-      // (You can move this logic into your game loop as needed)
-      /*
-      if (gamestarted) {
-        var canvas = document.getElementById('game-canvas');
-        canvas.style.backgroundImage = "url('level1.png')";
-      }
-      */
     </script>
   </div>
 </body>
