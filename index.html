@@ -88,15 +88,15 @@ h1 {
       function drawCanvasBackground(imageUrl) {
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
 
         const img = new Image();
-        img.src = imageUrl;
         img.onload = function() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         };
         img.onerror = function() {
+          console.error("Error loading image:", imageUrl);
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.fillStyle = "#333";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -104,16 +104,17 @@ h1 {
           ctx.font = "24px sans-serif";
           ctx.fillText("Background image not found!", 40, 40);
         };
+        img.src = imageUrl;
       }
 
       // Draw background on load
       window.addEventListener('load', function() {
-        drawCanvasBackground('level1.jpg');
+        drawCanvasBackground('images/level1.jpg');
       });
 
       // Redraw background on resize
       window.addEventListener('resize', function() {
-        drawCanvasBackground('level1.jpg');
+        drawCanvasBackground('images/level1.jpg');
       });
 
       function startGame() {
@@ -122,7 +123,7 @@ h1 {
         gamestarted = true;
         document.getElementById('game-menu').style.display = 'none';
         timefreeze = false;
-        drawCanvasBackground('level1.jpg'); // Draw level1.jpg on canvas
+        drawCanvasBackground('images/level1.jpg'); // Draw level1.jpg on canvas
       }
 
       function resumeGame() {
